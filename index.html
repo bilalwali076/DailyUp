@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <link rel="manifest" href="manifest.json">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — DailyGrowth.os</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="text-slate-800 antialiased flex flex-col md:flex-row min-h-screen">
+
+    <aside id="sidebar-container" class="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0 bg-white border-r border-slate-200 z-30"></aside>
+
+    <header class="md:hidden bg-white border-b border-slate-200 px-2.5 py-1.5 sticky top-0 z-30 flex items-center justify-between">
+        <span class="font-bold text-xs text-slate-900">DailyGrowth<span class="text-indigo-600">.os</span></span>
+        <span class="text-[9px] font-semibold text-indigo-600 bg-indigo-50 px-1.5 py-0.5 rounded-full">Dashboard</span>
+    </header>
+
+    <main class="flex-1 md:pl-64 pb-16 md:pb-6">
+        <div class="max-w-6xl mx-auto p-2 sm:p-4 fade-in">
+            <div class="flex items-center justify-between mb-2">
+                <div>
+                    <h2 class="text-sm sm:text-lg font-bold text-slate-900 leading-tight">Dashboard Sistem</h2>
+                    <p id="current-date-label" class="text-[10px] sm:text-xs text-slate-500">Memuat tanggal...</p>
+                </div>
+                <div class="hidden sm:flex items-center gap-1.5 bg-white px-2.5 py-1 rounded-lg border border-slate-200 shadow-sm">
+                    <i class="fa-regular fa-clock text-indigo-600 text-[11px]"></i>
+                    <span class="text-[11px] font-semibold text-slate-700">10m Pagi & 10m Malam</span>
+                </div>
+            </div>
+
+            <!-- 4 Kotak Ultra-Compact -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-1.5 sm:gap-2.5 mb-2.5">
+                <!-- Total Vocab -->
+                <div class="bg-white p-2 sm:p-2.5 rounded-lg border border-slate-200 shadow-sm">
+                    <div class="flex items-center justify-between gap-1 mb-0.5">
+                        <div class="w-5 h-5 rounded bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-database text-[9px]"></i>
+                        </div>
+                        <span id="dash-vocab-today-badge" class="text-[9px] font-bold px-1.5 py-0.2 rounded-full bg-indigo-50 text-indigo-700 truncate">0/5</span>
+                    </div>
+                    <p class="text-[8px] sm:text-[9px] font-semibold text-slate-400 uppercase tracking-tight truncate">Total Vocab</p>
+                    <h3 id="dash-total-vocab" class="text-xs sm:text-base font-extrabold text-slate-900 leading-tight">...</h3>
+                    <div class="w-full bg-slate-100 h-1 rounded-full mt-1 overflow-hidden">
+                        <div id="dash-vocab-bar" class="bg-indigo-600 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <!-- Vocab Bulan Ini -->
+                <div class="bg-white p-2 sm:p-2.5 rounded-lg border border-slate-200 shadow-sm">
+                    <div class="flex items-center justify-between gap-1 mb-0.5">
+                        <div class="w-5 h-5 rounded bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-calendar-check text-[9px]"></i>
+                        </div>
+                        <span class="text-[9px] font-semibold text-blue-600 bg-blue-50 px-1.5 py-0.2 rounded-full">Bulan</span>
+                    </div>
+                    <p class="text-[8px] sm:text-[9px] font-semibold text-slate-400 uppercase tracking-tight truncate">Vocab Bulan Ini</p>
+                    <h3 id="dash-vocab-month" class="text-xs sm:text-base font-extrabold text-slate-900 leading-tight">...</h3>
+                    <p class="text-[8px] sm:text-[10px] text-slate-500 mt-0.5 truncate">Target: 150/bln</p>
+                </div>
+
+                <!-- Pengeluaran -->
+                <div class="bg-white p-2 sm:p-2.5 rounded-lg border border-slate-200 shadow-sm">
+                    <div class="flex items-center justify-between gap-1 mb-0.5">
+                        <div class="w-5 h-5 rounded bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-wallet text-[9px]"></i>
+                        </div>
+                        <select id="dash-expense-period" class="text-[9px] font-bold px-1 py-0 rounded bg-slate-100 text-slate-700 border border-slate-200 focus:outline-none cursor-pointer max-w-[66px]">
+                            <option value="daily">Per Hari</option>
+                            <option value="weekly">Per Mgg</option>
+                            <option value="monthly">Per Bln</option>
+                        </select>
+                    </div>
+                    <p id="dash-expense-title" class="text-[8px] sm:text-[9px] font-semibold text-slate-400 uppercase tracking-tight truncate">Pengeluaran Hari Ini</p>
+                    <h3 id="dash-expense-amount" class="text-xs sm:text-base font-extrabold text-slate-900 leading-tight truncate">...</h3>
+                    <p id="dash-expense-limit-text" class="text-[8px] sm:text-[10px] text-slate-500 mt-0.5 truncate">Memuat batas...</p>
+                </div>
+
+                <!-- Progres Grammar -->
+                <div class="bg-white p-2 sm:p-2.5 rounded-lg border border-slate-200 shadow-sm">
+                    <div class="flex items-center justify-between gap-1 mb-0.5">
+                        <div class="w-5 h-5 rounded bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-spell-check text-[9px]"></i>
+                        </div>
+                        <span class="text-[9px] font-semibold text-amber-600 bg-amber-50 px-1.5 py-0.2 rounded-full">Tahap 1</span>
+                    </div>
+                    <p class="text-[8px] sm:text-[9px] font-semibold text-slate-400 uppercase tracking-tight truncate">Aturan Grammar</p>
+                    <h3 id="dash-grammar-progress" class="text-xs sm:text-base font-extrabold text-slate-900 leading-tight">0 / 5</h3>
+                    <p class="text-[8px] sm:text-[10px] text-slate-500 mt-0.5 truncate">Aturan dikuasai</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-2.5 sm:gap-4">
+                <div class="lg:col-span-2 bg-white p-2.5 sm:p-4 rounded-lg border border-slate-200 shadow-sm">
+                    <div class="flex items-center justify-between mb-1.5">
+                        <div>
+                            <h3 id="dash-chart-title" class="font-bold text-xs sm:text-sm text-slate-900">Tren Pengeluaran (7 Hari Terakhir)</h3>
+                            <p id="dash-chart-subtitle" class="text-[9px] sm:text-[11px] text-slate-400">Monitoring batas harian</p>
+                        </div>
+                        <span id="dash-chart-badge" class="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">IDR</span>
+                    </div>
+                    <div id="expense-chart" class="h-24 flex items-end justify-between gap-1 sm:gap-2 pt-2 pb-1 px-1 border-b border-slate-100"></div>
+                </div>
+
+                <div class="bg-white p-2.5 sm:p-4 rounded-lg border border-slate-200 shadow-sm">
+                    <h3 class="font-bold text-xs sm:text-sm text-slate-900">Sebaran Kategori Vocab</h3>
+                    <p class="text-[9px] sm:text-[11px] text-slate-400 mb-2">Hasil deteksi otomatis sistem</p>
+                    <div id="category-breakdown" class="space-y-1.5"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <nav id="mobile-nav-container" class="md:hidden fixed bottom-0 inset-x-0 bg-white border-t border-slate-200 flex justify-around z-30"></nav>
+
+    <script type="module" src="dashboard.js"></script>
+</body>
+</html>
